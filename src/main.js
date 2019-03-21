@@ -4,6 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+// use lazyload
+import VueLazyLoad from 'vue-lazyload'
+Vue.use(VueLazyLoad, {
+  loading: '/static/loading-svg/loading-bars.svg'
+})
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
