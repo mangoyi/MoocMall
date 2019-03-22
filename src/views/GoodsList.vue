@@ -21,7 +21,7 @@
                     <dl class="filter-price">
                     <dt>Price:</dt>
                     <dd>
-                        <a href="javascript:void(0)"  :class="{'cur': priceChecked === 'all'}" @click="priceChecked = 'all'">All</a>
+                        <a href="javascript:void(0)"  :class="{'cur': priceChecked === 'all'}" @click="setPriceFilter('all')">All</a>
                     </dd>
                     <dd v-for="(price, index) in priceFilter" :key="index">
                         <a href="javascript:void(0)" :class="{'cur': priceChecked === index}" @click="setPriceFilter(index)" >{{ price.startPrice }} - {{ price.endPrice }}</a>
@@ -48,7 +48,7 @@
                             </li>
                         </ul>
                         <div class="load-more" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
-                            加载中...
+                            <img src="../assets/svg/loading-spinning-bubbles.svg" alt="error" v-show="loading">
                         </div>
                     </div>
                 </div>
@@ -78,6 +78,10 @@ export default {
             priceFilter: [
                 {
                     startPrice: '0.00',
+                    endPrice: '100.00'
+                },
+                {
+                    startPrice: '100.00',
                     endPrice: '500.00'
                 },
                 {
@@ -86,7 +90,7 @@ export default {
                 },
                 { 
                     startPrice: '1000.00',
-                    endPrice: '2000.00'
+                    endPrice: '5000.00'
                 }
             ],
             priceChecked: 'all',
@@ -95,7 +99,8 @@ export default {
             sortFlag: true ,
             page: 1,
             pageSize: 8,
-            busy: false
+            busy: false,
+            loading: false
         }
     },
     mounted () {
@@ -107,12 +112,15 @@ export default {
             let param = {
                 page: this.page,
                 pageSize: this.pageSize,
-                sort: this.sortFlag ? 1 : -1
+                sort: this.sortFlag ? 1 : -1,
+                priceLevel: this.priceChecked
             }
+            this.loading = true;
             axios.get('/goods', {
                 params: param
             }).then(resp => {
                 let res = resp.data;
+                this.loading = false;
                 if (res.status === 0) {
                     if(flag) {
                         // 分页拼接数据
@@ -141,6 +149,8 @@ export default {
         setPriceFilter(index) {
             this.priceChecked = index;
             this.closePop();
+            this.page = 1;
+            this.getGoodsList()
         },
         sortGoods() {
             // 排序  sortFlag = true升序 false降序
