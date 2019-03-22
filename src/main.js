@@ -10,6 +10,10 @@ Vue.use(VueLazyLoad, {
   loading: '/static/loading-svg/loading-bars.svg'
 })
 
+// use infiniteScroll
+import infiniteScroll from 'vue-infinite-scroll'
+Vue.use(infiniteScroll)
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
