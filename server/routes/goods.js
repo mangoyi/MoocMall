@@ -20,7 +20,16 @@ mongoose.connection.on('disconnected', function() {
 
 router.get('/', function(req, res, next) {
     // 数据库查询代码(业务部分)
-    Goods.find({},function(err, doc) {
+    let page = parseInt(req.param('page'));
+    let pageSize = parseInt(req.param('pageSize'));
+    let sort = req.param('sort');
+    let skip = (page - 1)*pageSize;
+
+    let params = {};    
+    let goodsModel = Goods.find(params).skip(skip).limit(pageSize);
+    goodsModel.sort({'salePrice': sort});  // 1升序 -1降序
+
+    goodsModel.exec(function(err, doc) {
         if (err) {
             // 报错
             res.json({
