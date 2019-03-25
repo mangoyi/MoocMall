@@ -30,7 +30,7 @@
               <div class="navbar-menu-container">
                 <span class="navbar-link" v-text="nickName" v-if="nickName"></span>
                 <a href="javascript:void(0)" class="navbar-link" @click="loginModalFlag=true" v-if="!nickName">Login</a>
-                <a href="javascript:void(0)" class="navbar-link" v-if="nickName">Logout</a>
+                <a href="javascript:void(0)" class="navbar-link" @click="logOut" v-if="nickName">Logout</a>
                 <div class="navbar-cart-container">
                   <!-- <span class="navbar-cart-count" v-if="cartCount>0">{{cartCount}}</span> -->
                   <a class="navbar-link navbar-cart-link" href="/#/cart">
@@ -107,6 +107,14 @@ export default {
                 }
             }).catch(err => {
                 console.log('error')
+            })
+        },
+        logOut() {
+            axios.post('/users/logout').then((response) => {
+                let res = response.data;
+                if (res.status == 0) {
+                    this.nickName = '';
+                }
             })
         }
     }

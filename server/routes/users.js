@@ -48,4 +48,19 @@ router.post('/login', function(req, res, next) {
 
 });
 
+// logout
+router.post('/logout', function(req, res, next) {
+  // clear cookie
+  res.cookie('userId', '', {
+    path: '/',
+    maxAge: -1
+  })
+  res.json({
+    status: 0,
+    msg: 'success',
+    result: ''
+  })
+
+});
+
 module.exports = router;
