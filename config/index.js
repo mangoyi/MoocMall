@@ -14,6 +14,12 @@ module.exports = {
       // 代理转发， 解决跨域的问题
         '/goods': {
             target: 'http://localhost:3000'
+        },
+        '/goods/*': {
+            target: 'http://localhost:3000'
+        },
+        '/users/*': {
+            target: 'http://localhost:3000'
         }
     },
 

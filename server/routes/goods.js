@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var Goods = require('../models/goods');
 
 // connect Mongodb
-mongoose.connect('mongodb://127.0.0.1:27017/dumall');
+mongoose.connect('mongodb://127.0.0.1:27017/dumall', {useNewUrlParser: true});
 
 mongoose.connection.on('connected', function() {
     console.log('mongoDB connected success');
