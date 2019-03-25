@@ -22,6 +22,28 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 注入中间件, 所有的路由请求都会到这里
+app.use(function(req, res, next) {
+  // 获取cookie
+  if (req.cookies.userId) {
+    next();
+  } else {
+    console.log('path'+ req.path);
+    console.log('originUrl' + req.originalUrl);
+    // 可以访问的api请求白名单
+    if (req.originalUrl == '/users/login' || req.originalUrl == '/users/logout' || req.path == '/goods/list') {
+      next();
+    } else {
+      res.json({
+        status: 10001,
+        msg: '当前未登录',
+        result: ''
+      })
+    }
+  }
+
+});
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/goods', goodsRouter)

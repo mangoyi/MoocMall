@@ -86,7 +86,18 @@ export default {
             nickName: false
         }
     },
+    mounted() {
+      this.checkLogin();
+    },
     methods: {
+        checkLogin() {
+          axios.get('/users/checkLogin').then(resp => {
+            let data = resp.data;
+            if (data.status == 0) {
+              this.nickName = data.result;
+            } 
+          })
+        },
         login() {
             if (!this.userName || !this.userPwd) {
                 this.errorTip = true;

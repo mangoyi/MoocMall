@@ -20,7 +20,7 @@ mongoose.connection.on('disconnected', function() {
 
 // 查询商品列表
 // goods 路由会访问此路由,
-router.get('/', function(req, res, next) {
+router.get('/list', function(req, res, next) {
     // 数据库查询代码(业务部分)
     let page = parseInt(req.param('page'));
     let pageSize = parseInt(req.param('pageSize'));
