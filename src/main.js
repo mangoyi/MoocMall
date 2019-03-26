@@ -14,6 +14,10 @@ Vue.use(VueLazyLoad, {
 import infiniteScroll from 'vue-infinite-scroll'
 Vue.use(infiniteScroll)
 
+// vue global filter
+import {currency} from './utils/currency'
+Vue.filter('currency', currency);
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

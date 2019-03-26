@@ -146,7 +146,6 @@ import NavFooter from './NavFooter';
 import NavHeader from './NavHeader';
 import NavBread from './NavBread';
 import axios from 'axios';
-import { currency } from './../utils/currency';
 export default {
     data() {
         return  {
@@ -154,9 +153,6 @@ export default {
             modalConfirm: false,
             productId: ''
         }
-    },
-    filters: {
-        currency: currency
     },
     components: {
         Modal,
