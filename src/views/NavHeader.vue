@@ -79,7 +79,7 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            loginModalFlag: true,
+            loginModalFlag: false,
             userName: '',
             userPwd: '',
             errorTip: false,
