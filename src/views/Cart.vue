@@ -94,7 +94,7 @@
                     </div>
                     <div class="cart-tab-5">
                         <div class="cart-item-opration">
-                            <a href="javascript:;" class="item-edit-btn">
+                            <a href="javascript:;" class="item-edit-btn" @click="delCartConfirm(item.productId)">
                                 <svg class="icon icon-del">
                                     <use xlink:href="#icon-del"></use>
                                 </svg>
@@ -129,11 +129,11 @@
             </div>
         </div>
         </div>
-        <Modal>
+        <Modal :mdShow="modalConfirm"  @close="closeModal">
             <p slot="message">你确认要删除此条数据吗?</p>
             <div slot="btnGroup">
-                <a class="btn btn--m" href="javascript:;">确认</a>
-                <a class="btn btn--m btn--red" href="javascript:;">关闭</a>
+                <a class="btn btn--m" href="javascript:;" @click="delCart">确认</a>
+                <a class="btn btn--m btn--red" href="javascript:;" @click="modalConfirm = false">关闭</a>
             </div>
         </Modal>
         <nav-footer></nav-footer>
@@ -149,7 +149,9 @@ import axios from 'axios';
 export default {
     data() {
         return  {
-            cartList: []
+            cartList: [],
+            modalConfirm: false,
+            productId: ''
         }
     },
     components: {
@@ -166,6 +168,24 @@ export default {
             axios.get('/users/cartList').then((res) => {
                 let data = res.data;
                 this.cartList = data.result;
+            });
+        },
+        closeModal() {
+            this.modalConfirm = false;
+        },
+        delCartConfirm(productId) {
+            this.modalConfirm = true;
+            this.productId = productId;
+        },
+        delCart() {
+            axios.post('/users/cart/del', {
+                productId: this.productId
+            }).then(resp => {
+                let data = resp.data;
+                if (data.status == 0) {
+                    this.modalConfirm = false
+                    this.init();
+                }
             })
         }
     }

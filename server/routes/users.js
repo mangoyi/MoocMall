@@ -108,4 +108,36 @@ router.get('/cartList', function(req, res, next) {
   })
 });
 
+// 删除商品 del
+router.post("/cart/del", function(req, res, next) {
+  var userId = req.cookies.userId,
+      productId = req.body.productId;
+  User.update({
+    userId: userId
+  }, {
+    $pull: 
+      { 
+        'cartList': 
+        {
+          'productId': productId
+        }
+      }
+    }, function(err, doc) {
+      if (err) {
+        res.json({
+          status: 1,
+          msg: err.message,
+          result: ''
+        })
+      } else {
+        res.json({
+          status: 0,
+          msg: '',
+          result: 'success'
+        })
+      }
+
+    })
+});
+
 module.exports = router;
