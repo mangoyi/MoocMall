@@ -119,7 +119,7 @@
                 </div>
                 <div class="cart-foot-r">
                 <div class="item-total">
-                    Item total: <span class="total-price">{{totalPrice}}</span>
+                    Item total: <span class="total-price">{{totalPrice | currency}}</span>
                 </div>
                 <div class="btn-wrap">
                     <a class="btn btn--red" >Checkout</a>
@@ -146,6 +146,7 @@ import NavFooter from './NavFooter';
 import NavHeader from './NavHeader';
 import NavBread from './NavBread';
 import axios from 'axios';
+import { currency } from './../utils/currency';
 export default {
     data() {
         return  {
@@ -153,6 +154,9 @@ export default {
             modalConfirm: false,
             productId: ''
         }
+    },
+    filters: {
+        currency: currency
     },
     components: {
         Modal,
