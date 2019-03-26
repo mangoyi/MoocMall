@@ -11,7 +11,7 @@
                 <a href="javascript:void(0)" class="default cur">Default</a>
                 <a href="javascript:void(0)" class="price" @click="sortGoods">
                     Price 
-                    <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg>
+                    <svg class="icon icon-arrow-short" v-bind:class="{'sort-up': !sortFlag}"><use xlink:href="#icon-arrow-short"></use></svg>
                 </a>
                 <a href="javascript:void(0)" class="filterby stopPop" @click="showFilterPop">Filter by</a>
                 </div>
@@ -55,7 +55,23 @@
                 </div>
             </div>
         </div>
-        <div class="md-overlay" v-show="overLayFlag"  @click="closePop" ></div>
+        <modal v-bind:mdShow="mdShow" v-on:close="closeModal">
+            <p slot="message">
+                请先登录，否则无法加入购物车
+            </p>
+            <div slot="btnGroup">
+                <a class="btn btn--m" href="javascript:void(0)" @click="mdShow = false">关闭</a>
+            </div>
+        </modal>
+        <modal v-bind:mdShow="mdShowCart" v-on:close="closeModal">
+            <p slot="message">
+                加入购物车成功
+            </p>
+            <div slot="btnGroup">
+                <a class="btn btn--m" href="javascript:void(0)" @click="mdShowCart = false">继续购物</a>
+                <router-link class="btn btn--m" href="javascript:void(0)" to="/cart">查看购物车</router-link>
+            </div>
+        </modal>
         <nav-footer></nav-footer> 
     </div>
 </template>
@@ -64,13 +80,15 @@
 import NavHeader from './NavHeader'
 import NavFooter from './NavFooter'
 import NavBread from './NavBread'
+import Modal from '../components/Modal'
 import axios from 'axios'
 
 export default {
     components: {
         NavHeader,
         NavFooter,
-        NavBread
+        NavBread,
+        Modal
     },
     data() {
         return {
@@ -100,7 +118,9 @@ export default {
             page: 1,
             pageSize: 8,
             busy: false,
-            loading: false
+            loading: false,
+            mdShow: false,
+            mdShowCart: false
         }
     },
     mounted () {
@@ -172,14 +192,17 @@ export default {
             }).then((res) => {
                 let data = res.data;
                 if (data.status == 0) {
-                    // 加入成功
-                    alert('加入购物车成功')
+                    this.mdShowCart = true;
                 } else {
-                    alert(data.msg)
+                    this.mdShow = true;
                 }
             }).catch(err => {
                 // todoes
             })
+        },
+        closeModal() {
+            this.mdShow = false;
+            this.mdShowCart = false;
         }
     }
 }
@@ -188,5 +211,15 @@ export default {
 <style>
 @import url('../assets/css/base.css');
 @import url('../assets/css/product.css');
-
+.sort-up {
+    transform:rotate(180deg);
+    transition: all .3s ease-out;
+}
+.icon-arrow-short {
+    transition: all .3s ease-out;
+}
+.btn:hover {
+    background-color: #ffe5e6;
+    transition: all .3s ease-out;
+}
 </style>
