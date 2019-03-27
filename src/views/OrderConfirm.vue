@@ -59,7 +59,7 @@
                         </ul>
                     </div>
                     <ul class="cart-item-list">
-                        <li v-for="item in cartList" v-if="item.checked == 1" :key="item.id">
+                        <li v-for="item in cartList" :key="item.id">
                             <div class="cart-tab-1">
                                 <div class="cart-item-pic">
                                     <img v-lazy="'./../../static/' + item.productImage" alt="item.productName">
@@ -119,10 +119,11 @@
 
                 <div class="order-foot-wrap">
                     <div class="prev-btn-wrap">
-                    <button class="btn btn--m">Previous</button>
+                    <!-- <button class="btn btn--m">Previous</button> -->
+                    <router-link to="/address" class="btn btn--m">Previous</router-link>
                     </div>
                     <div class="next-btn-wrap">
-                    <button class="btn btn--m btn--red">Proceed to payment</button>
+                        <button class="btn btn--m btn--red" @click="payment">Proceed to payment</button>
                     </div>
                 </div>
                 </div>
@@ -163,8 +164,10 @@ export default {
         init() {
             axios.get('/users/cartList').then(resp => {
                 let data = resp.data;
-                this.cartList = data.result; 
-
+                let list = data.result;
+                this.cartList = list.filter(item => {
+                    return item.checked == 1;
+                })
                 this.cartList.forEach(item => {
                     if (item.checked == 1) {
                         this.subTotal += (item.salePrice * item.productNum);
@@ -172,6 +175,23 @@ export default {
                 });
 
                 this.orderTotal = this.subTotal + this.shipping - this.discount + this.tax;
+            })
+        },
+        payment() {
+            let addressId = this.$route.query.addressId;
+            console.log(addressId);
+            axios.post('/users/payMent', {
+                addressId: addressId,
+                orderTotal: this.orderTotal
+            }).then(resp => {
+                let data = resp.data;
+                if (data.status == 0) {
+                    console.log('order created success');
+                    this.$router.push({
+                        path: '/orderSuccess',
+                        query: { orderId: data.result.orderId}
+                    });
+                }
             })
         }
     }
