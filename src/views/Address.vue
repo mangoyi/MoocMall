@@ -60,7 +60,7 @@
             <div class="addr-list-wrap">
               <div class="addr-list">
                 <ul>
-                  <li v-for="item in addressList" :key="item.id">
+                  <li v-for="(item, index) in addressListFilter" :key="index" v-bind:class="{'check': checkIndex == index}" @click="checkIndex = index">
                     <dl>
                       <dt>{{item.userName}}</dt>
                       <dd class="address">{{item.streetName}}</dd>
@@ -88,7 +88,7 @@
               </div>
 
               <div class="shipping-addr-more">
-                <a class="addr-more-btn up-down-btn" href="javascript:;" >
+                <a class="addr-more-btn up-down-btn" href="javascript:;"  @click="expand" v-bind:class="{open: limit > 3}">
                   more
                   <i class="i-up-down">
                     <i class="i-up-down-l"></i>
@@ -134,7 +134,9 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            addressList: []
+            addressList: [],
+            limit: 3,
+            checkIndex: 0
         }
     },
     components: {
@@ -146,6 +148,12 @@ export default {
     mounted() {
         this.init();
     },
+    computed: {
+        addressListFilter() {
+            // 默认显示3条
+            return this.addressList.slice(0, this.limit)
+        }
+    },
     methods: {
         init() {
             axios.get('/users/addressList').then(resp => {
@@ -154,6 +162,13 @@ export default {
                     this.addressList = data.result;
                 }
             })
+        },
+        expand() {
+            if (this.limit == 3) {
+                this.limit = this.addressList.length;
+            } else {
+                this.limit = 3;
+            }
         }
     }
 }
