@@ -60,14 +60,14 @@
             <div class="addr-list-wrap">
               <div class="addr-list">
                 <ul>
-                  <li v-for="(item, index) in addressListFilter" :key="index" v-bind:class="{'check': checkIndex == index}" @click="checkIndex = index">
+                  <li v-for="(item, index) in addressListFilter" :key="index" v-bind:class="{'check': checkIndex == index}" @click="handleCheck(index, item.addressId)">
                     <dl>
                       <dt>{{item.userName}}</dt>
                       <dd class="address">{{item.streetName}}</dd>
                       <dd class="tel">{{item.tel}}</dd>
                     </dl>
                     <div class="addr-opration addr-del">
-                      <a href="javascript:;" class="addr-del-btn">
+                      <a href="javascript:;" class="addr-del-btn" @click="delAddressConfirm(item.addressId)">
                         <svg class="icon icon-del"><use xlink:href="#icon-del"></use></svg>
                       </a>
                     </div>
@@ -116,11 +116,28 @@
               </div>
             </div>
             <div class="next-btn-wrap">
-              <router-link class="btn btn--m btn--red" to="/cart">Next</router-link>
+              <a class="btn btn--m btn--red" @click="handleConfirm">Next</a>
             </div>
           </div>
         </div>
       </div>
+        <modal :mdShow="isMdShow" @close="closeModal">
+            <p slot="message">
+                您是否确认要删除此地址？
+            </p>
+            <div slot="btnGroup">
+                <a href="javascript:void(0)" class="btn btn--m" @click="delAddress">确认</a>
+                <a href="javascript:void(0)" class="btn btn--m" @click="isMdShow = false">取消</a>
+            </div>
+        </modal>
+        <modal :mdShow="addressModalFlag" @close="closeInfoModal">
+            <p slot="message">
+                请选择收获地址
+            </p>
+            <div slot="btnGroup">
+                <a href="javascript:void(0)" class="btn btn--m" @click="addressModalFlag = false">确 认</a>
+            </div>
+        </modal>
       <nav-footer></nav-footer>
     </div>
 </template>
@@ -136,7 +153,11 @@ export default {
         return {
             addressList: [],
             limit: 3,
-            checkIndex: 0
+            checkIndex: 0,
+            isMdShow: false,
+            addressId: '',
+            selectedAddrId: '',
+            addressModalFlag: false
         }
     },
     components: {
@@ -161,7 +182,12 @@ export default {
                 if (data.status == 0) {
                     this.addressList = data.result;
                     this.checkIndex =  this.addressList.findIndex(item => item.isDefault == true);
-                    console.log(this.checkIndex);
+                    this.selectedAddrId = this.addressList.forEach(item => {
+                        if (item.isDefault) {
+                            return item.addressId;
+                        }
+                    });
+                    console.log(this.selectedAddrId);
                 }
             })
         },
@@ -180,6 +206,44 @@ export default {
                 if (data.status == 0) {
                     console.log('set Default');
                     this.init();
+                }
+            })
+        },
+        closeModal() {
+            this.isMdShow =  false;
+        },
+        delAddressConfirm(addressId) {
+            this.isMdShow = true;
+            this.addressId = addressId;
+        },
+        delAddress() {
+            axios.post('/users/delAddress', {
+                addressId: this.addressId
+            }).then(resp => {
+                let data = resp.data;
+                if (data.status == 0) {
+                    console.log("del success")
+                }
+                this.isMdShow = false;
+                this.init();
+            })
+        },
+        handleCheck(index, addressId) {
+            this.checkIndex = index;
+            this.selectedAddrId = addressId;
+        },
+        closeInfoModal() {
+            this.addressModalFlag = false;
+        },
+        handleConfirm() {
+            if (!this.selectedAddrId) {
+                this.addressModalFlag = true;
+                return;
+            }
+            this.$router.push({
+                path: "/cartConfirm",
+                query: {
+                    addressId: this.selectedAddrId
                 }
             })
         }
