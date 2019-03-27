@@ -24,6 +24,11 @@ export default new Router({
       path: '/orderConfirm',
       name: 'orderConfirm',
       component: () => import('../views/orderConfirm')
+    },
+    {
+      path: '/orderSuccess',
+      name: 'orderSuccess',
+      component: () => import('../views/orderSuccess')
     }
   ]
 })
