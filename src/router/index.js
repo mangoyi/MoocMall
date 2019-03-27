@@ -19,6 +19,11 @@ export default new Router({
       path: '/address',
       name: 'Address',
       component: () => import('../views/Address')
+    },
+    {
+      path: '/orderConfirm',
+      name: 'orderConfirm',
+      component: () => import('../views/orderConfirm')
     }
   ]
 })

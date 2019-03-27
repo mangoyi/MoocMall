@@ -241,7 +241,7 @@ export default {
                 return;
             }
             this.$router.push({
-                path: "/cartConfirm",
+                path: "/orderConfirm",
                 query: {
                     addressId: this.selectedAddrId
                 }
@@ -250,10 +250,4 @@ export default {
     }
 }
 </script>
-
-<style>
-@import url('../assets/css/base.css');
-@import url('../assets/css/product.css');
-@import url('../assets/css/checkout.css');
-</style>
 

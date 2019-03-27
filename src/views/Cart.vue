@@ -258,9 +258,6 @@ export default {
 </script>
 
 <style>
-@import url('../assets/css/base.css');
-@import url('../assets/css/product.css');
-@import url('../assets/css/checkout.css');
 .input-sub,.input-add{
     min-width: 40px;
     height: 100%;

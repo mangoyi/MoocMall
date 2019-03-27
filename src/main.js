@@ -18,6 +18,11 @@ Vue.use(infiniteScroll)
 import {currency} from './utils/currency'
 Vue.filter('currency', currency);
 
+// global css
+import './assets/css/base.css'
+import './assets/css/product.css'
+import './assets/css/checkout.css'
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
