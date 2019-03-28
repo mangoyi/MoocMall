@@ -18,6 +18,8 @@ Vue.use(infiniteScroll)
 import {currency} from './utils/currency'
 Vue.filter('currency', currency);
 
+import store from './store'
+
 // global css
 import './assets/css/base.css'
 import './assets/css/product.css'
@@ -29,6 +31,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
