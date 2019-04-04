@@ -206,7 +206,8 @@ export default {
             }).then(resp => {
                 let data = resp.data;
                 if (data.status == 0) {
-                    this.modalConfirm = false
+                    this.modalConfirm = false;
+                    this.$store.commit("SETCARTCOUNT", -1);
                     this.init();
                 }
             })
@@ -228,6 +229,13 @@ export default {
                 checked: item.checked
             }).then( (res) => {
                 let data = res.data;
+                let num = 0;
+                if (flag == 'add') {
+                    num = 1;
+                } else if (flag == 'minus') {
+                    num = -1;
+                } 
+                this.$store.commit('SETCARTCOUNT', num);
             })
         },
         toggleCheckAll() {

@@ -193,6 +193,7 @@ export default {
                 let data = res.data;
                 if (data.status == 0) {
                     this.mdShowCart = true;
+                    this.$store.commit('SETCARTCOUNT', 1);
                 } else {
                     this.mdShow = true;
                 }
